@@ -77,7 +77,9 @@ function save_photo(array $file): string
     }
 
     if (!is_dir(UPLOAD_DIR)) {
-        mkdir(UPLOAD_DIR, 0750, true);
+        if (!mkdir(UPLOAD_DIR, 0750, true) && !is_dir(UPLOAD_DIR)) {
+            throw new RuntimeException('Impossible de créer le dossier d\'upload.');
+        }
     }
 
     $filename = bin2hex(random_bytes(16)) . '.' . ($mimeType === 'image/png' ? 'png' : 'jpg');

@@ -117,9 +117,11 @@ include __DIR__ . '/includes/header.php';
             <div class="form-group">
                 <label for="duree_validite">Durée de validité (années) <span class="required">*</span></label>
                 <select id="duree_validite" name="duree_validite" required>
-                    <?php for ($i = 1; $i <= 10; $i++): ?>
-                        <option value="<?= $i ?>"
-                            <?= (isset($_POST['duree_validite']) && (int)$_POST['duree_validite'] === $i) ? 'selected' : ($i === 1 ? 'selected' : '') ?>>
+                    <?php
+                    $selected_duree = isset($_POST['duree_validite']) ? (int) $_POST['duree_validite'] : 1;
+                    for ($i = 1; $i <= 10; $i++):
+                    ?>
+                        <option value="<?= $i ?>" <?= $i === $selected_duree ? 'selected' : '' ?>>
                             <?= $i ?> an<?= $i > 1 ? 's' : '' ?>
                         </option>
                     <?php endfor; ?>
