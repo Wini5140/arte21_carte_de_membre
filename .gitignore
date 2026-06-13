@@ -1,0 +1,10 @@
+# Fichiers uploadés (photos des membres)
+uploads/*
+!uploads/.htaccess
+!uploads/.gitkeep
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+*.log
+*.bak
