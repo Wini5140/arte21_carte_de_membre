@@ -1,0 +1,6 @@
+# Interdire tout accès direct au répertoire uploads (sauf images)
+<FilesMatch "(?i)\.(php|phtml|php3|php4|php5|pl|py|cgi|sh|js|html)$">
+    Order deny,allow
+    Deny from all
+</FilesMatch>
+Options -Indexes -ExecCGI

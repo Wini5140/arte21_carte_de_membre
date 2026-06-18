@@ -1,0 +1,10 @@
+/* Print stylesheet – ARTE21 */
+@media print {
+    body { background: #fff !important; }
+    .no-print { display: none !important; }
+    .member-card { filter: none; }
+    .member-card__front {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
