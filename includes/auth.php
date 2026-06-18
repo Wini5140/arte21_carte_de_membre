@@ -7,10 +7,16 @@ require_once __DIR__ . '/../config/database.php';
 
 // Démarrage de session sécurisé
 if (session_status() === PHP_SESSION_NONE) {
+    $isHttps = (
+        (!empty($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) !== 'off')
+        || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443)
+        || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower((string) $_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https')
+    );
+
     session_set_cookie_params([
         'lifetime' => 0,
         'path'     => '/',
-        'secure'   => isset($_SERVER['HTTPS']) || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https'),
+        'secure'   => $isHttps,
         'httponly' => true,
         'samesite' => 'Strict',
     ]);
@@ -46,6 +52,7 @@ function login(string $username, string $password): bool
         $_SESSION['username'] = $username;
         return true;
     }
+
     return false;
 }
 
@@ -55,6 +62,7 @@ function login(string $username, string $password): bool
 function logout(): void
 {
     $_SESSION = [];
+
     if (ini_get('session.use_cookies')) {
         $p = session_get_cookie_params();
         setcookie(
@@ -67,6 +75,7 @@ function logout(): void
             $p['httponly']
         );
     }
+
     session_destroy();
 }
 
@@ -78,6 +87,7 @@ function csrf_token(): string
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     }
+
     return $_SESSION['csrf_token'];
 }
 
@@ -87,6 +97,7 @@ function csrf_token(): string
 function verify_csrf(): void
 {
     $token = $_POST['csrf_token'] ?? '';
+
     if (!hash_equals(csrf_token(), $token)) {
         http_response_code(403);
         exit('Requête invalide (CSRF).');
